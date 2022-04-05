@@ -1,22 +1,23 @@
 {
-  "name": "wordl",
+  "name": "wordle-statistics",
   "version": "1.0.0",
-  "description": "Statistics for the game of Wordl - not the game",
-  "main": "wordl.js",
+  "description": "Statistics for the game of Wordle - not the game",
+  "main": "wordle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meg768/wordl.git"
+    "url": "git+https://github.com/meg768/wordle-statistics.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/meg768/wordl/issues"
+    "url": "https://github.com/meg768/wordle-statistics/issues"
   },
-  "homepage": "https://github.com/meg768/wordl#readme",
+  "homepage": "https://github.com/meg768/wordle-statistics#readme",
   "dependencies": {
+    "yargs": "^17.4.0",
     "yow": "^1.0.110"
   }
 }
