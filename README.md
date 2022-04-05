@@ -1,2 +1,2 @@
-# wordl-stats
-Statistics for the game of Wordl
+# wordl
+Statistics for the game of Wordl - not the game
