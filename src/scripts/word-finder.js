@@ -12,6 +12,7 @@ module.exports = class WordFinder {
 		this.debug = console.log;
 	}
 
+
 	findWords() {
 
 		let rankWord = (word) => {
@@ -97,7 +98,7 @@ module.exports = class WordFinder {
 
 				if (rank > result.wordC.rank) {
 					result.wordC = {word:wordC, rank:rankWord(wordC)};
-					//this.debug(`Found optimal combination ${result.wordA.word}, ${result.wordB.word}, ${result.wordC.word}`);
+					this.debug(`Found optimal combination ${result.wordA.word}, ${result.wordB.word}, ${result.wordC.word}`);
 
 				}
 			}

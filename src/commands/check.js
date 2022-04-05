@@ -4,17 +4,12 @@ const Command = require('../scripts/command.js');
 module.exports = class extends Command {
 
     constructor(options) {
-
         super({command: 'check <word>', description: 'Checks if word exists', ...options}); 
-
-
 	}
 
     options(yargs) {
         super.options(yargs);
-		yargs.option('word',   {word:'Word to check', type: 'strig', default:undefined});
     }
-
 
 	async run() {
 
