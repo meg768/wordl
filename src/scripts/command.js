@@ -1,3 +1,5 @@
+var yargs = require('yargs');
+
 
 module.exports = class Command {
 
@@ -7,19 +9,21 @@ module.exports = class Command {
         this.command = command;
         this.description = description;
         this.debug = () => {};
+		this.log = console.log;
+		this.argv = {};
 
-        this.builder = (yargs) => {
-            this.options(yargs);
-        };
+		var config = {};
 
-        this.handler = async (argv) => {
+		config.command = this.command;
+		config.builder = this.options.bind(this);
+		config.desc    = this.description;
+
+		config.handler = async (argv) => {
 			try {
 				this.argv = argv;
 				this.debug = typeof argv.debug === 'function' ? argv.debug : (argv.debug ? console.log : () => {});
-				this.log = console.log;
 	
 				await this.run();
-	
 			}
 			catch(error) {
 				if (this.argv.debug)
@@ -28,7 +32,10 @@ module.exports = class Command {
 					console.log(error.message);
 
 			}
-        };
+		}
+
+		yargs.command(config);
+
     }
 
     options(yargs) {

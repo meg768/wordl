@@ -1,64 +1,41 @@
 #!/usr/bin/env node
 
-var fs   = require('fs');
-var path = require('path');
-var args = require('yargs');
-
-
 
 class App {
 
 	constructor() {
-		this.fileName = __filename;
-
-
 	}
-
-
-	
-	loadCommands() {
-		var folder = path.join(__dirname, './src/commands');
-
-		fs.readdirSync(folder).forEach((file) => {
-
-			var fileName = path.join(folder, file);
-			var components = path.parse(fileName);
-
-			if (components.ext == '.js') {
-				var Command = require(fileName);
-				var cmd = new Command(); 
-
-				args.command({
-					command: cmd.command,
-					builder: cmd.builder,
-					handler: cmd.handler,
-					desc:    cmd.description 
-				});  
-			}
-
-		})
-
-	}
-
 
 	run() {
 
 		try {
-			args.scriptName('wordle');
-			args.usage('Usage: $0 <command>');
+			var fs = require('fs');
+			var path = require('path');
+			var yargs = require('yargs');
+			var folder = path.join(__dirname, './src/commands');
 
-			this.loadCommands();  
+			yargs.scriptName('wordle');
+			yargs.usage('Usage: $0 <command>');
 
-			args.help();
-			args.wrap(null);
+			fs.readdirSync(folder).forEach((file) => {
+	
+				var fileName = path.join(folder, file);
+	
+				if (fileName.match("^.*\.js$")) {
+					var Command = require(fileName);
+					new Command(); 
+				}
+			});
 
-			args.check(function() {
+			yargs.help();
+			yargs.wrap(null);
+
+			yargs.check(function() {
 				return true;
 			});
 
-			args.demand(1);
-
-			args.argv;
+			yargs.demand(1);
+			yargs.argv;
 
 		}
 		catch(error) {
