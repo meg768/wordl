@@ -12,9 +12,9 @@ class App {
 			yargs.usage('Usage: $0 <command>');
 
 			new (require('./src/commands/lookup.js'))();
-			new (require('./src/commands/start-words.js'))();
+			new (require('./src/commands/startup.js'))();
 			new (require('./src/commands/stats.js'))();
-			new (require('./src/commands/before-and-after.js'))();
+			new (require('./src/commands/letter-frequency.js'))();
 
 			yargs.help();
 			yargs.wrap(null);

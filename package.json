@@ -1,10 +1,10 @@
 {
   "name": "wordle-statistics",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Statistics for the game of Wordle - not the game",
   "main": "wordle.js",
   "scripts": {
-    "test": "./wordle.js test"
+    "test": "./wordle.js lf --after A"
   },
   "repository": {
     "type": "git",

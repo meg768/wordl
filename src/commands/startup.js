@@ -5,7 +5,7 @@ module.exports = class extends Command {
 
     constructor() {
 
-        super({command: 'sw [options]', description: 'Finds out good starting words'}); 
+        super({command: 'startup [options]', description: 'Finds out good starting words'}); 
 
 
 	}

@@ -40,7 +40,9 @@ module.exports = class Command {
 
     options(yargs) {
         yargs.usage(`Usage: $0 ${this.command}`);
-        yargs.option('debug', {describe: 'Debug mode', type:'boolean', default:true});
+        yargs.option('debug', {alias: 'd', describe: 'Debug mode', type:'boolean'});
+        yargs.option('help', {alias: 'h', describe: 'Show help', type:'boolean'});
+        yargs.alias('version', 'v');
     }
 
     async run() {

@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
+const LetterStatistics = require('../scripts/letter-statistics.js');
 const Command = require('../scripts/command.js');
 
 module.exports = class extends Command {
 
-    constructor(options) {
+    constructor() {
 
-        super({command: 'bna [options]', description: 'Displays the most frequent letters before and after each letter', ...options}); 
+        super({command: 'lf [options]', description: 'Displays the most frequent letters used in Wordle'}); 
 
 		this.words = require('../scripts/words.js');
 		this.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -15,6 +16,16 @@ module.exports = class extends Command {
 
     options(yargs) {
         super.options(yargs);
+		yargs.option('position', {alias: 'p', describe:'Displays letter freqency by position (1-5)', type:'boolean', default:undefined});
+		yargs.option('before', {alias: 'b', describe:'Displays letter freqency before specified letter', type:'string', default:undefined});
+		yargs.option('after', {alias: 'a', describe:'Displays letter freqency after specified letter', type:'string', default:undefined});
+
+		yargs.check((argv, option) => {
+
+			return true;
+		});
+
+
     }
 
 	// Returns a string containing the most common letters
@@ -84,17 +95,46 @@ module.exports = class extends Command {
 
 	}
 
+	//display0
 	async run() {
-
+		let stats = new LetterStatistics();
 		let map = this.process(this.words);
 
-		this.alphabet.split('').forEach((letter) => {
-			let before = map.before[letter] || '';
-			let after = map.after[letter] || '';
-			this.log(`${letter}: ${before || '-'}`);
-			this.log(`   ${after || '-'}`);
-			this.log(``);
-		});
+		if (this.argv.position) {
+			for (let i = 0; i < 5; i++) {
+				this.log(`${i+1}: ${stats.frequency.position[i].alphabet}`);
+			}
+		}
+		else if (this.argv.before) {
+
+			if (this.argv.before == undefined) {
+				this.alphabet.split('').forEach((letter) => {
+					this.log(`${letter}: ${map.before[letter] || ''}`);
+				});
+			}
+			else {
+				this.log(`${map.before[this.argv.before.toUpperCase()] || ''}`);
+
+			}
+		}
+		else if (this.argv.after) {
+
+			if (this.argv.after == '') {
+				this.alphabet.split('').forEach((letter) => {
+					this.log(`${letter}: ${map.after[letter] || ''}`);
+				});
+			}
+			else {
+				this.log(`${map.after[this.argv.after.toUpperCase()] || ''}`);
+
+			}
+
+		}
+		else {
+			this.log(`${stats.frequency.alphabet}`);
+
+		}
+
 	}
 };
 

@@ -7,7 +7,7 @@ Statistics for the game of Wordle - not the game
 
 	Commands:
 	wordle lookup <word>    Checks if word exists
-	wordle sw [options]     Finds out good starting words
+	wordle startup [options]     Finds out good starting words
 	wordle stats [options]  Displays letter statistics
 	wordle bna [options]    Displays the most frequent letters before and after each letter
 

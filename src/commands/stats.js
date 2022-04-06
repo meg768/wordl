@@ -5,13 +5,14 @@ module.exports = class extends Command {
 
     constructor(options) {
 
-        super({command: 'stats [options]', description: 'Displays letter statistics', ...options}); 
+        super({command: 'stats [options]', description: 'Displays letter frequency', ...options}); 
 
 
 	}
 
     options(yargs) {
         super.options(yargs);
+		yargs.option('position', {alias: 'p', describe:'Displays letter freqency by position', type:'boolean', default:undefined});
     }
 
 
@@ -21,17 +22,26 @@ module.exports = class extends Command {
 
 		let stats = new LetterStatistics();
 
-		this.log(`Vanligast förekommande bokstäver i Wordle är i ordning:`);
-		this.log(`${stats.frequency.alphabet}`);
+		if (this.argv.position) {
+			for (let i = 0; i < 5; i++) {
+				this.log(`${stats.frequency.position[i].alphabet}`);
+			}
+		}
+		else {
+			this.log(`${stats.frequency.alphabet}`);
+		}
+
+/*		this.log(`The most frequent letters in Wordle are:`);
 
 		this.log('');
 
-		this.log(`Vanligaste bokstäverna i respektive ruta är följande:`);
+		this.log(`The most frequent letters in each position are:`);
 
 		for (let i = 0; i < 5; i++) {
-			this.log(`${stats.frequency.position[i].alphabet}`);
+			this.log(`${i+1}: ${stats.frequency.position[i].alphabet}`);
 		}
-		
+*/		
+		/*
 		this.log();
 
 		this.log(`Ord som börjar och slutar med konsonant: ${stats.match(/^[BCDFGHJKLMNPQRSTVWXZ].*[BCDFGHJKLMNPQRSTVWXZ]$/g)}%`);
@@ -46,6 +56,7 @@ module.exports = class extends Command {
 		this.log(`CVCVC: ${stats.match(/^[^EYUIOA][EYUIOA][^EYUIOA][EYUIOA][^EYUIOA]$/g)}%`);
 		this.log(`CVVCC: ${stats.match(/^[^EYUIOA][EYUIOA][EYUIOA][^EYUIOA][^EYUIOA]$/g)}%`);
 		this.log(`V••••: ${stats.match(/^[EYUIOA].*$/g)}%`);
+		*/
 
 	}
 
