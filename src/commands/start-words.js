@@ -3,9 +3,9 @@ const Command = require('../scripts/command.js');
 
 module.exports = class extends Command {
 
-    constructor(options) {
+    constructor() {
 
-        super({command: 'start [options]', description: 'Finds out good starting words', ...options}); 
+        super({command: 'sw [options]', description: 'Finds out good starting words'}); 
 
 
 	}
@@ -14,7 +14,6 @@ module.exports = class extends Command {
         super.options(yargs);
     }
 
-
 	async run() {
 
 
@@ -22,7 +21,6 @@ module.exports = class extends Command {
 		let words = finder.findWords();
 
 		this.log(`The best starting words are ${words[0]} and ${words[1]}. Then perhaps use ${words[2]}.`);		
-
 	}
 
 };

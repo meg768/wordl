@@ -3,29 +3,18 @@
 
 class App {
 
-	constructor() {
-	}
-
 	run() {
 
 		try {
-			var fs = require('fs');
-			var path = require('path');
 			var yargs = require('yargs');
-			var folder = path.join(__dirname, './src/commands');
 
 			yargs.scriptName('wordle');
 			yargs.usage('Usage: $0 <command>');
 
-			fs.readdirSync(folder).forEach((file) => {
-	
-				var fileName = path.join(folder, file);
-	
-				if (fileName.match("^.*\.js$")) {
-					var Command = require(fileName);
-					new Command(); 
-				}
-			});
+			new (require('./src/commands/lookup.js'))();
+			new (require('./src/commands/start-words.js'))();
+			new (require('./src/commands/stats.js'))();
+			new (require('./src/commands/before-and-after.js'))();
 
 			yargs.help();
 			yargs.wrap(null);

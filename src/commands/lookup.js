@@ -1,10 +1,11 @@
 
+
 const Command = require('../scripts/command.js');
 
 module.exports = class extends Command {
 
-    constructor(options) {
-        super({command: 'check <word>', description: 'Checks if word exists', ...options}); 
+    constructor() {
+        super({command: 'lookup <word>', description: 'Checks if word exists'}); 
 	}
 
     options(yargs) {

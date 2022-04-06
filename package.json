@@ -4,7 +4,7 @@
   "description": "Statistics for the game of Wordle - not the game",
   "main": "wordle.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./wordle.js test"
   },
   "repository": {
     "type": "git",

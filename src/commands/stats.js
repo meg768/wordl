@@ -21,8 +21,8 @@ module.exports = class extends Command {
 
 		let stats = new LetterStatistics();
 
-		this.log(`Vanligast förekommande bokstäver i Wordl är i ordning:`);
-		this.log(`${stats.frequency.alphabet}.`);
+		this.log(`Vanligast förekommande bokstäver i Wordle är i ordning:`);
+		this.log(`${stats.frequency.alphabet}`);
 
 		this.log('');
 
@@ -37,8 +37,15 @@ module.exports = class extends Command {
 		this.log(`Ord som börjar och slutar med konsonant: ${stats.match(/^[BCDFGHJKLMNPQRSTVWXZ].*[BCDFGHJKLMNPQRSTVWXZ]$/g)}%`);
 		this.log(`Ord som börjar och slutar med vokal: ${stats.match(/^[EYUIOA].*[EYUIOA]$/g)}%`);
 		this.log(`Ord med varannan konsonant/vokal: ${stats.match(/^[BCDFGHJKLMNPQRSTVWXZ][EYUIOA][BCDFGHJKLMNPQRSTVWXZ][EYUIOA][BCDFGHJKLMNPQRSTVWXZ]$/g)}%`);
+
 		this.log(`Ord med varannan vokal/konsonant: ${stats.match(/^[EYUIOA][BCDFGHJKLMNPQRSTVWXZ][EYUIOA][BCDFGHJKLMNPQRSTVWXZ][EYUIOA]$/g)}%`);
+
 		this.log(`Ord som innehåller två vokaler i följd: ${stats.match(/[EYUIOA][EYUIOA]/g)}%`);
+
+		this.log(`CXXXC: ${stats.match(/^[^EYUIOA].*[^EYUIOA]$/g)}%`);
+		this.log(`CVCVC: ${stats.match(/^[^EYUIOA][EYUIOA][^EYUIOA][EYUIOA][^EYUIOA]$/g)}%`);
+		this.log(`CVVCC: ${stats.match(/^[^EYUIOA][EYUIOA][EYUIOA][^EYUIOA][^EYUIOA]$/g)}%`);
+		this.log(`V••••: ${stats.match(/^[EYUIOA].*$/g)}%`);
 
 	}
 
