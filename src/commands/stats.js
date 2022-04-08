@@ -1,5 +1,6 @@
 const LetterStatistics = require('../scripts/letter-statistics.js');
 const Command = require('../scripts/command.js');
+const EasyTable = require('easy-table');
 
 module.exports = class extends Command {
 
@@ -12,25 +13,69 @@ module.exports = class extends Command {
 
     options(yargs) {
         super.options(yargs);
-		yargs.option('position', {alias: 'p', describe:'Displays letter freqency by position', type:'boolean', default:undefined});
     }
+
+	filter(words, pattern) {
+
+		let result = [];
+
+		words.forEach((word) => {
+
+			if (word.match(pattern) != null) {
+				result.push(word);
+	
+			}
+		});
+
+		return count;
+	}
+
 
 
 	async run() {
 
-
-
 		let stats = new LetterStatistics();
+		let array = [];
 
-		if (this.argv.position) {
-			for (let i = 0; i < 5; i++) {
-				this.log(`${stats.frequency.position[i].alphabet}`);
-			}
-		}
-		else {
-			this.log(`${stats.frequency.alphabet}`);
+
+		for (let i = 0; i < 5; i++) {
+			array.push({position:i+1, frequency:stats.getLetterPositionFrequency(i)});
+
 		}
 
+		array.push({position:'Summary', frequency:stats.getLetterFrequency()});
+
+		var table = new EasyTable();
+
+		array.forEach(function(item) {
+			table.cell('Position', item.position);
+			table.cell('Frequency', item.frequency);
+			table.newRow();
+		})
+
+		table.sort(['Letter', 'Position']);
+		this.log(table.toString());		
+
+		/*
+		let words = stats.words;
+
+
+		words = words.filter((word) => {
+			return word.match(/(?=.*S)(?=.*E)(?=.*A)/) != null;
+		});
+		words = words.filter((word) => {
+			return word.match(/[HTDPK]/) == null;
+		});
+
+		words = words.filter((word) => {
+			return word.match(/..A../) != null;
+		});
+
+
+		console.log(words);
+		console.log(words.length);
+
+		*/
 /*		this.log(`The most frequent letters in Wordle are:`);
 
 		this.log('');

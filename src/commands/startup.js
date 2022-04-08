@@ -1,5 +1,6 @@
 const WordFinder = require('../scripts/word-finder.js');
 const Command = require('../scripts/command.js');
+const EasyTable = require('easy-table');
 
 module.exports = class extends Command {
 
@@ -20,7 +21,13 @@ module.exports = class extends Command {
 		let finder = new WordFinder();
 		let words = finder.findWords();
 
-		this.log(`The best starting words are ${words[0]} and ${words[1]}. Then perhaps use ${words[2]}.`);		
+		let data = {
+			'First word': words[0],
+			'Second word': words[1],
+			'Optional third word': words[2]
+		};
+
+		this.log(EasyTable.print(data));
 	}
 
 };

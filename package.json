@@ -4,7 +4,7 @@
   "description": "Statistics for the game of Wordle - not the game",
   "main": "wordle.js",
   "scripts": {
-    "test": "./wordle.js lf --after A"
+    "test": "./wordle.js filter --contains SEA"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/meg768/wordle-statistics#readme",
   "dependencies": {
+    "easy-table": "^1.2.0",
     "yargs": "^17.4.0",
     "yow": "^1.0.110"
   }

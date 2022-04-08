@@ -4,10 +4,40 @@
 module.exports = class LetterStatistics {
 
 	constructor() {
-		this.sprintf = require('yow/sprintf');
 		this.words = require('./words.js');
-		this.frequency = this.getFrequency();
 		this.debug = console.log;
+	}
+
+
+	getNeighbourFrequency(letter, position) {
+
+		let left = {};
+		let right = {};
+
+		this.words.forEach((word) => {
+			let thisChar = word.charAt(position);
+			let leftChar = word.charAt(position - 1);
+			let rightChar = word.charAt(position + 1);
+
+			if (thisChar == letter)  {
+				left[leftChar] = left[leftChar] == undefined ? 1 : left[leftChar] + 1;
+				right[rightChar] = right[rightChar] == undefined ? 1 : right[rightChar] + 1;
+			}
+		});
+
+		let convert = ((map) => {
+			let entries = Object.entries(map).sort((A, B) => {
+				return B[1] - A[1];
+			});
+			entries = entries.map((entry) => {
+				return entry[0];
+			});
+
+			return entries.join('');
+	
+		});
+
+		return {left:convert(left), right:convert(right)};
 	}
 
 	match(pattern) {
@@ -21,48 +51,34 @@ module.exports = class LetterStatistics {
 		return Math.floor((100 * count / this.words.length) + 0.5);
 	}
 
-	getFrequency() {
+	count(pattern) {
+
+		let count = 0;
+
+		this.words.forEach((word) => {
+
+			if (word.match(pattern) != null) {
+				console.log(word);
+				count++;
+	
+			}
+		});
+
+		return count;
+	}
 
 
-		var getLetterFrequency = () => {
 
-			var array = [];
+	// Returns a frequency string of all letters
+	getLetterFrequency() {
 
-			this.words.forEach((word) => {
+		var array = [];
 
-				for (var i = 0; i < word.length; i++) {
-					var letter = word.charAt(i);
-					var index = word.charCodeAt(i) - "A".charCodeAt(0);
+		this.words.forEach((word) => {
 
-					if (array[index] == undefined) {
-						array[index] = {letter:letter, count:1}
-					}
-					else {
-						array[index].count++;
-					}
-				}
-			});
-
-			array = array.sort((A, B) => {
-				return B.count - A.count;
-
-			});
-
-			array = array.map((entry) => {
-				return entry.letter;
-			});
-
-			return array.join('');
-		}
-
-		var getLetterPositionFrequency = (position) => {
-
-			var array = [];
-
-			this.words.forEach((word) => {
-
-				var letter = word.charAt(position);
-				var index = word.charCodeAt(position) - "A".charCodeAt(0);
+			for (var i = 0; i < word.length; i++) {
+				var letter = word.charAt(i);
+				var index = word.charCodeAt(i) - "A".charCodeAt(0);
 
 				if (array[index] == undefined) {
 					array[index] = {letter:letter, count:1}
@@ -70,22 +86,56 @@ module.exports = class LetterStatistics {
 				else {
 					array[index].count++;
 				}
-			});
+			}
+		});
 
-			array = array.sort((A, B) => {
-				return B.count - A.count;
+		array = array.sort((A, B) => {
+			return B.count - A.count;
 
-			});
+		});
 
-			array = array.map((entry) => {
-				return entry.letter;
-			});
+		array = array.map((entry) => {
+			return entry.letter;
+		});
 
-			return array.join('');
-		}
+		return array.join('');
+	}
+
+	getLetterPositionFrequency(position) {
+
+		var array = [];
+
+		this.words.forEach((word) => {
+
+			var letter = word.charAt(position);
+			var index = word.charCodeAt(position) - "A".charCodeAt(0);
+
+			if (array[index] == undefined) {
+				array[index] = {letter:letter, count:1}
+			}
+			else {
+				array[index].count++;
+			}
+		});
+
+		array = array.sort((A, B) => {
+			return B.count - A.count;
+
+		});
+
+		array = array.map((entry) => {
+			return entry.letter;
+		});
+
+		return array.join('');
+	}
+
+
+
+	getFrequency() {
 
 		let stats = {};
-		let freq = getLetterFrequency();
+		let freq = this.getLetterFrequency();
 
 		stats.alphabet = freq;
 		stats.vouls = freq.replace(/[BCDFGHJKLMNPQRSTVWXZ]/g, "");
@@ -94,7 +144,7 @@ module.exports = class LetterStatistics {
 		stats.position = [];
 
 		for (var i = 0; i < this.words[0].length; i++) {
-			let freq = getLetterPositionFrequency(i);
+			let freq = this.getLetterPositionFrequency(i);
 
 			stats.position[i] = {
 				alphabet: freq,
