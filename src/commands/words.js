@@ -28,13 +28,14 @@ module.exports = class extends Command {
 
     options(yargs) {
         super.options(yargs);
-		yargs.option('letters', {describe:'Only use the specified set of letters (default is the entire alphabet)', type:'string', default:undefined});
-		yargs.option('omit', {describe:'Omit specified letters in result', type:'string', default:''});
-		yargs.option('contains', {describe:'The words must contain all these letters, including duplicates', type:'string', default:undefined});
-		yargs.option('limit', {describe:'Limit the number of words displayed', type:'number', default:20});
-		yargs.option('sort', {describe:'Sort output by column', type:'string', default:undefined});
-		yargs.option('unique', {describe:'Only show words with unique set of letters', type:'boolean', default:false});
-		yargs.option('filter', {describe:'Filter using regular expression', type:'string', default:undefined});
+		yargs.option('letters', {alias:'w', describe:'Only use the specified set of letters (default is the entire alphabet)', type:'string', default:undefined});
+		yargs.option('omit', {alias:'o', describe:'Omit specified letters in result', type:'string', default:''});
+		yargs.option('contains', {alias:'c', describe:'The words must contain all these letters, including duplicates', type:'string', default:undefined});
+		yargs.option('limit', {alias:'l', describe:'Limit the number of words displayed', type:'number', default:20});
+		yargs.option('format', {alias:'m', describe:'In C/V/X format.', type:'string', default:undefined});
+		yargs.option('rank', {alias:'r', describe:'Sort output by rank', type:'string', choices:['A', 'B', 'C'], default:undefined});
+		yargs.option('unique', {alias:'u', describe:'Only show words with unique set of letters', type:'boolean', default:false});
+		yargs.option('filter', {alias:'f', describe:'Filter using regular expression', type:'string', default:undefined});
     }
 
 
@@ -42,6 +43,7 @@ module.exports = class extends Command {
 
 		var map = {};
 		var count = 0;
+		var max = 0;
 
 		this.alphabet.split('').forEach((letter) => {
 			map[letter] = 0;
@@ -54,11 +56,14 @@ module.exports = class extends Command {
 
 				map[letter]++;
 				count++;
+
+				if (map[letter] > max)
+					max = map[letter];
 			}
 		});
 
 		this.alphabet.split('').forEach((letter) => {
-			map[letter] = map[letter] / count;
+			map[letter] = map[letter] / max;
 		});
 
 		return map;
@@ -68,6 +73,7 @@ module.exports = class extends Command {
 
 		var map = {};
 		var count = 0;
+		var max = 0;
 
 		this.alphabet.split('').forEach((letter) => {
 			map[letter] = 0;
@@ -79,10 +85,13 @@ module.exports = class extends Command {
 
 			map[letter]++;
 			count++;
+
+			if (map[letter] > max)
+				max = map[letter];			
 		});
 
 		this.alphabet.split('').forEach((letter) => {
-			map[letter] = map[letter] / count;
+			map[letter] = map[letter] / max;
 		});
 
 		return map;
@@ -100,7 +109,7 @@ module.exports = class extends Command {
 			rank += this.frequency[letter];
 		}
 
-		return Math.floor(1000 * rank / count);
+		return Math.floor(rank * 100 / 5 + 0.5);
 	}
 
 	rankWordByPosition(word)  {
@@ -115,20 +124,7 @@ module.exports = class extends Command {
 			rank += this.positionFrequency[i][letter];
 		}
 
-		return Math.floor(1000 * rank / count);
-	}
-
-	isWordInAlphabet(word, alphabet) {
-
-		var regexp = new RegExp('[' + alphabet + ']' + '', 'g')
-		var match = word.match(regexp);
-
-		return match != null && match.length == word.length;
-	}	
-
-	removeWordFromAlphabet = (word, alphabet) => {
-		let regexp = new RegExp('[' + word + ']', 'g');
-		return alphabet.replace(regexp, '') ;
+		return Math.floor(rank * 100 / 5 + 0.5);
 	}
 
 	async run() {
@@ -138,11 +134,11 @@ module.exports = class extends Command {
 		let alphabet = (this.argv.letters || this.alphabet).toUpperCase();
 
 		if (this.argv.omit) {
-			let omit = isArray(this.argv.omit) ? this.argv.omit : [this.argv.omit];
+			let omit = isArray(this.argv.omit) ? this.argv.omit.join('') : this.argv.omit;
 
-			omit.forEach((word) => {
-				alphabet = this.removeWordFromAlphabet(word.toUpperCase(), alphabet);
 
+			words = words.filter((word) => {
+				return word.match(`[${omit.toUpperCase()}]`) == null;
 			});
 		}
 
@@ -156,6 +152,28 @@ module.exports = class extends Command {
 			});
 
 		}
+
+		if (this.argv.format) {
+
+			let regexp = this.argv.format;
+			let voul = "[EYUIOA]";
+			let consonant = "[^EYUIOA]";
+
+			regexp = regexp.replace(/C/g, consonant);
+			regexp = regexp.replace(/V/g, voul);
+			regexp = regexp.replace(/X/g, '.');
+			regexp = regexp.replace(/_/g, '.'); 
+			regexp = regexp.replace(/ /g, '.');
+			regexp = regexp.replace(/\?/g, '.');
+
+			regexp = `^${regexp}$`;
+
+			words = words.filter((word) => {
+				return word.match(regexp) != null;
+			});
+
+		}
+
 
 		// Filter out words with unique characters
 		if (this.argv.unique) {
@@ -186,14 +204,32 @@ module.exports = class extends Command {
 		}
 		
 		words.forEach((word) => {
-			if (this.isWordInAlphabet(word, alphabet)) {
-				array.push({word:word, rankA:this.rankWord(word), rankB:this.rankWordByPosition(word)});
+			let isWordInAlphabet = (word, alphabet) => {
+
+				var regexp = new RegExp('[' + alphabet + ']' + '', 'g')
+				var match = word.match(regexp);
+		
+				return match != null && match.length == word.length;
+			}	
+		
+			if (isWordInAlphabet(word, alphabet)) {
+				let rankA = this.rankWord(word);
+				let rankB = this.rankWordByPosition(word);
+				let rankC = Math.floor((rankA + rankB) / 2);
+				array.push({word:word, rankA:rankA, rankB:rankB, rankC:rankC});
 			}
 		});
 
-		array.sort((A, B) => {
-			return (B.rankA - A.rankA) * 1000 + (B.rankB - A.rankB);
-		});
+		if (this.argv.rank) {
+			let rank = `rank${this.argv.rank.toUpperCase()}`;
+
+			array.sort((A, B) => {
+				return B[rank] - A[rank];
+			});
+
+		}
+	
+		
 
 		let allItems = array.length;
 
@@ -202,7 +238,7 @@ module.exports = class extends Command {
 		}
 
 		if (this.argv.json) {
-			this.log(JSON.stringify(array, null, '    '));
+			this.log(JSON.stringify(array, null, '\t'));
 		}
 		else {
 			let displayedItems = array.length;
@@ -214,13 +250,9 @@ module.exports = class extends Command {
 					table.cell('Word', item.word);
 					table.cell('Rank A', item.rankA, EasyTable.leftPadder(' '));
 					table.cell('Rank B', item.rankB, EasyTable.leftPadder(' '));
+					table.cell('Rank C', item.rankC, EasyTable.leftPadder(' '));
 					table.newRow();
 				})
-	
-				if (this.argv.sort) {
-					let sort = isArray(this.argv.sort) ? this.argv.sort : [this.argv.sort]; 
-					table.sort(sort);
-				}
 		
 				this.log(table.toString());
 	
@@ -230,8 +262,6 @@ module.exports = class extends Command {
 		
 	
 		}
-
-
 	}
 };
 

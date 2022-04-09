@@ -16,3 +16,7 @@ Statistics for the game of Wordle - not the game
 	--help     Show help  [boolean]
 
 
+## Example
+```console
+./wordle.js words
+```

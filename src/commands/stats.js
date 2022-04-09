@@ -6,105 +6,71 @@ module.exports = class extends Command {
 
     constructor(options) {
 
-        super({command: 'stats [options]', description: 'Displays letter frequency', ...options}); 
+        super({command: 'stats [options]', description: 'Displays word statistics', ...options}); 
 
-
+		this.words = require('../scripts/words.js');
+		this.output = [];
 	}
 
     options(yargs) {
         super.options(yargs);
     }
 
-	filter(words, pattern) {
 
-		let result = [];
 
-		words.forEach((word) => {
+	match(pattern) {
 
-			if (word.match(pattern) != null) {
-				result.push(word);
-	
-			}
+		let count = 0;
+
+		this.words.forEach((word) => {
+			count += word.match(pattern) != null;
 		});
 
-		return count;
+		return Math.floor((100 * count / this.words.length) + 0.5);
 	}
 
 
+
+	print(key, value) {
+		if (arguments.length > 0) {
+			this.output.push({key:key, value:value});
+		}
+		else {
+			let table = new EasyTable();
+
+			this.output.forEach(function(item) {
+				table.cell('Description', item.key);
+				table.cell('Value', item.value);
+				table.newRow();
+			})
+	
+			this.log(table.toString());		
+	
+		}
+
+
+	}
 
 	async run() {
 
 		let stats = new LetterStatistics();
-		let array = [];
 
-
-		for (let i = 0; i < 5; i++) {
-			array.push({position:i+1, frequency:stats.getLetterPositionFrequency(i)});
-
-		}
-
-		array.push({position:'Summary', frequency:stats.getLetterFrequency()});
-
-		var table = new EasyTable();
-
-		array.forEach(function(item) {
-			table.cell('Position', item.position);
-			table.cell('Frequency', item.frequency);
-			table.newRow();
-		})
-
-		table.sort(['Letter', 'Position']);
-		this.log(table.toString());		
-
-		/*
-		let words = stats.words;
-
-
-		words = words.filter((word) => {
-			return word.match(/(?=.*S)(?=.*E)(?=.*A)/) != null;
-		});
-		words = words.filter((word) => {
-			return word.match(/[HTDPK]/) == null;
-		});
-
-		words = words.filter((word) => {
-			return word.match(/..A../) != null;
-		});
-
-
-		console.log(words);
-		console.log(words.length);
-
-		*/
-/*		this.log(`The most frequent letters in Wordle are:`);
-
-		this.log('');
-
-		this.log(`The most frequent letters in each position are:`);
+		this.print('Most common letters', stats.getLetterFrequency());
 
 		for (let i = 0; i < 5; i++) {
-			this.log(`${i+1}: ${stats.frequency.position[i].alphabet}`);
+			this.print(`Most common letters in position ${i+1}`, stats.getLetterPositionFrequency(i));
 		}
-*/		
-		/*
-		this.log();
 
-		this.log(`Ord som börjar och slutar med konsonant: ${stats.match(/^[BCDFGHJKLMNPQRSTVWXZ].*[BCDFGHJKLMNPQRSTVWXZ]$/g)}%`);
-		this.log(`Ord som börjar och slutar med vokal: ${stats.match(/^[EYUIOA].*[EYUIOA]$/g)}%`);
-		this.log(`Ord med varannan konsonant/vokal: ${stats.match(/^[BCDFGHJKLMNPQRSTVWXZ][EYUIOA][BCDFGHJKLMNPQRSTVWXZ][EYUIOA][BCDFGHJKLMNPQRSTVWXZ]$/g)}%`);
+		this.print(`Matches CVCVC`, `${this.match(/^[^EYUIOA][EYUIOA][^EYUIOA][EYUIOA][^EYUIOA]$/g)}%`);
+		this.print(`Matches VCVCV`, `${this.match(/^[EYUIOA][^EYUIOA][EYUIOA][^EYUIOA][EYUIOA]$/g)}%`);
+		this.print(`Matches CVVCC`, `${this.match(/^[^EYUIOA][EYUIOA][EYUIOA][^EYUIOA][^EYUIOA]$/g)}%`);
+		this.print(`Matches C••••`, `${this.match(/^[^EYUIOA].*$/g)}%`);
+		this.print(`Matches C•••C`, `${this.match(/^[^EYUIOA].*[^EYUIOA]$/g)}%`);
+		this.print(`Matches V••••`, `${this.match(/^[EYUIOA].*$/g)}%`);
+		this.print(`Matches V•••V`, `${this.match(/^[EYUIOA].*[EYUIOA]$/g)}%`);
 
-		this.log(`Ord med varannan vokal/konsonant: ${stats.match(/^[EYUIOA][BCDFGHJKLMNPQRSTVWXZ][EYUIOA][BCDFGHJKLMNPQRSTVWXZ][EYUIOA]$/g)}%`);
-
-		this.log(`Ord som innehåller två vokaler i följd: ${stats.match(/[EYUIOA][EYUIOA]/g)}%`);
-
-		this.log(`CXXXC: ${stats.match(/^[^EYUIOA].*[^EYUIOA]$/g)}%`);
-		this.log(`CVCVC: ${stats.match(/^[^EYUIOA][EYUIOA][^EYUIOA][EYUIOA][^EYUIOA]$/g)}%`);
-		this.log(`CVVCC: ${stats.match(/^[^EYUIOA][EYUIOA][EYUIOA][^EYUIOA][^EYUIOA]$/g)}%`);
-		this.log(`V••••: ${stats.match(/^[EYUIOA].*$/g)}%`);
-		*/
-
+		this.print();
 	}
-
 };
 
 

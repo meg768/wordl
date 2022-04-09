@@ -15,7 +15,7 @@ class App {
 			new (require('./src/commands/startup.js'))();
 			new (require('./src/commands/stats.js'))();
 			new (require('./src/commands/nabo.js'))();
-//			new (require('./src/commands/find.js'))();
+//			new (require('./src/commands/test.js'))();
 			new (require('./src/commands/words.js'))();
 
 			yargs.help();

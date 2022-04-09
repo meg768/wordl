@@ -75,9 +75,9 @@ module.exports = class WordFinder {
 					if (isWordInAlphabet(wordB, alphabet)) {
 
 						let rank = rankWord(wordA) + rankWord(wordB);
-							this.debug(`Found combination ${wordA}, ${wordB} with ranking ${rank}`);
 
 						if (rank > result.wordA.rank + result.wordB.rank) {
+							this.debug(`Found combination ${wordA}, ${wordB} with ranking ${rank}`);
 							result.wordA = {word:wordA, rank:rankWord(wordA)};
 							result.wordB = {word:wordB, rank:rankWord(wordB)};
 							//this.debug(`Found combination ${result.wordA.word}, ${result.wordB.word} with ranking ${result.wordA.rank + result.wordB.rank}`);
