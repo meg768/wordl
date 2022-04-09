@@ -6,7 +6,7 @@ module.exports = class extends Command {
 
     constructor(options) {
 
-        super({command: 'stats [options]', description: 'Displays word statistics', ...options}); 
+        super({command: 'stats', description: 'Displays word statistics', ...options}); 
 
 		this.words = require('../scripts/words.js');
 		this.output = [];

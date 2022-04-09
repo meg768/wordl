@@ -10,7 +10,7 @@ module.exports = class extends Command {
 
     constructor() {
 
-        super({command: 'nabo [options]', description: 'Displays neighbour letter frequency'}); 
+        super({command: 'nabo', description: 'Displays neighbour letter frequency'}); 
 
 		this.words = require('../scripts/words.js');
 		this.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -20,8 +20,6 @@ module.exports = class extends Command {
 
     options(yargs) {
         super.options(yargs);
-		yargs.option('position', {describe:'', type:'number', default:undefined});
-		yargs.option('letter', {describe:'', type:'string', default:undefined});
     }
 
 
