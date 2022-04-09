@@ -35,12 +35,13 @@ Let us sort output by rank C.
 	$ ./wordle.js words --unique --rank C
 
 The word TARES has the highest rank. Let´s use this as a first word.
+If you want to continue to eliminate letters and ignore the results from Wordle then proceed.
 Since I don´t want duplicate letters in the second word you may
 omit these letters in the next search.
 
 	$ ./wordle.js words --unique --rank C --omit TARES
 
-This will give you another list of words and the first one is COLIN
+This will give you another list of words. The first one is COLIN
 and will be our second start word. Now for the third word, if needed.
 
 	$ ./wordle.js words --unique --rank C --omit TARES --omit COLIN
@@ -48,4 +49,5 @@ and will be our second start word. Now for the third word, if needed.
 The word with the heighest rank is BUMPY so this will be our third start word
 if necessary. So our "best" start words are TARES, COLIN and BUMPY.
 
-But this is based on rank "C". 
+But this is based on rank "C". Rank "A" is based on the letter frequency in the english
+alphabet. Rank "B" is based on the letter frequency per column. Rank "C" is the mean value of the two. 
