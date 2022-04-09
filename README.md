@@ -41,8 +41,11 @@ omit these letters in the next search.
 	$ ./wordle.js words --unique --rank C --omit TARES
 
 This will give you another list of words and the first one is COLIN
-and will be out second start word. Now for the third word, if needed
+and will be our second start word. Now for the third word, if needed.
 
 	$ ./wordle.js words --unique --rank C --omit TARES --omit COLIN
 
-The word with the heighest rank is BUMPY. 
+The word with the heighest rank is BUMPY so this will be our third start word
+if necessary. So our "best" start words are TARES, COLIN and BUMPY.
+
+But this is based on rank "C". 

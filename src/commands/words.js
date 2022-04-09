@@ -32,7 +32,7 @@ module.exports = class extends Command {
 		yargs.option('omit', {alias:'o', describe:'Omit specified letters in result', type:'string', default:''});
 		yargs.option('contains', {alias:'c', describe:'The words must contain all these letters, including duplicates', type:'string', default:undefined});
 		yargs.option('limit', {alias:'l', describe:'Limit the number of words displayed', type:'number', default:20});
-		yargs.option('format', {alias:'m', describe:'In C/V/X format.', type:'string', default:undefined});
+		yargs.option('pattern', {alias:'p', describe:'In C/V/X format.', type:'string', default:undefined});
 		yargs.option('rank', {alias:'r', describe:'Sort output by rank', type:'string', choices:['A', 'B', 'C'], default:undefined});
 		yargs.option('unique', {alias:'u', describe:'Only show words with unique set of letters', type:'boolean', default:false});
 		yargs.option('filter', {alias:'f', describe:'Filter using regular expression', type:'string', default:undefined});
@@ -153,9 +153,9 @@ module.exports = class extends Command {
 
 		}
 
-		if (this.argv.format) {
+		if (this.argv.pattern) {
 
-			let regexp = this.argv.format;
+			let regexp = this.argv.pattern;
 			let voul = "[EYUIOA]";
 			let consonant = "[^EYUIOA]";
 
