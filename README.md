@@ -36,6 +36,7 @@ Let us sort output by rank C.
 
 The word TARES has the highest rank. Let´s use this as a first word.
 If you want to continue to eliminate letters and ignore the results from Wordle then proceed.
+
 Since I don´t want duplicate letters in the second word you may
 omit these letters in the next search.
 
