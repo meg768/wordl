@@ -18,14 +18,15 @@ Statistics for the game of Wordle - not the game
 
 ## Example
 
-This is an example how to generate the first "best" words in Wordle
+This is an example how to generate the first "best" words in Wordle.
 
-Start by entering the command
+Start by entering the command:
 
-	$ ./wordle.js words
+	$ ./wordle.js words --no-limit
 
-This will display all the words in the Wordle dictionary. However,
-we want out start word to consist of unique letters. So type the following command
+This will display all words in the Wordle dictionary. However,
+we want our start word to consist of unique letters and don't need
+to see all words in the dictionary. So type the following command.
 
 	$ ./wordle.js words --unique
 

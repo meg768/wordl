@@ -31,7 +31,7 @@ module.exports = class extends Command {
 		yargs.option('letters', {alias:'w', describe:'Only use the specified set of letters (default is the entire alphabet)', type:'string', default:undefined});
 		yargs.option('omit', {alias:'o', describe:'Omit specified letters in result', type:'string', default:''});
 		yargs.option('contains', {alias:'c', describe:'The words must contain all these letters, including duplicates', type:'string', default:undefined});
-		yargs.option('limit', {alias:'l', describe:'Limit the number of words displayed', type:'number', default:20});
+		yargs.option('limit', {alias:'l', describe:'Limit the number of words displayed', type:'number', default:15});
 		yargs.option('pattern', {alias:'p', describe:'In C/V/X format.', type:'string', default:undefined});
 		yargs.option('rank', {alias:'r', describe:'Sort output by rank', type:'string', choices:['A', 'B', 'C'], default:undefined});
 		yargs.option('unique', {alias:'u', describe:'Only show words with unique set of letters', type:'boolean', default:false});
