@@ -52,3 +52,5 @@ if necessary. So our "best" start words are TARES, COLIN and BUMPY.
 
 But this is based on rank "C". Rank "A" is based on the letter frequency in the english
 alphabet. Rank "B" is based on the letter frequency per column. Rank "C" is the mean value of the two. 
+
+By experimenting with different ranks for each word you will get different results.
