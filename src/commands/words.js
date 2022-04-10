@@ -187,7 +187,7 @@ module.exports = class extends Command {
 			words = words.filter((word) => {
 				word = word.split('');
 
-				let letters = this.argv.contains.split('');
+				let letters = this.argv.contains.toUpperCase().split('');
 				let count = 0;
 
 				letters.forEach((letter) => {
