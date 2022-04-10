@@ -11,12 +11,12 @@ class App {
 			yargs.scriptName('wordle');
 			yargs.usage('Usage: $0 <command>');
 
+			new (require('./src/commands/words.js'))();
 			new (require('./src/commands/lookup.js'))();
-			new (require('./src/commands/startup.js'))();
+	//		new (require('./src/commands/startup.js'))();
 			new (require('./src/commands/stats.js'))();
 			new (require('./src/commands/nabo.js'))();
 //			new (require('./src/commands/test.js'))();
-			new (require('./src/commands/words.js'))();
 
 			yargs.help();
 			yargs.wrap(null);

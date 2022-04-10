@@ -1,5 +1,5 @@
 {
-  "name": "wordle-statistics",
+  "name": "wordle-words",
   "version": "1.0.1",
   "description": "Statistics for the game of Wordle - not the game",
   "main": "wordle.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meg768/wordle-statistics.git"
+    "url": "git+https://github.com/meg768/wordle-words.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/meg768/wordle-statistics/issues"
+    "url": "https://github.com/meg768/wordle-words/issues"
   },
-  "homepage": "https://github.com/meg768/wordle-statistics#readme",
+  "homepage": "https://github.com/meg768/wordle-words#readme",
   "dependencies": {
     "easy-table": "^1.2.0",
     "yargs": "^17.4.0",

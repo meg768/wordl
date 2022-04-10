@@ -33,7 +33,7 @@ module.exports = class extends Command {
 		yargs.option('contains', {alias:'c', describe:'The words must contain all these letters, including duplicates', type:'string', default:undefined});
 		yargs.option('limit', {alias:'l', describe:'Limit the number of words displayed', type:'number', default:15});
 		yargs.option('pattern', {alias:'p', describe:'In C/V/X format.', type:'string', default:undefined});
-		yargs.option('rank', {alias:'r', describe:'Sort output by rank', type:'string', choices:['A', 'B', 'C'], default:undefined});
+		yargs.option('rank', {alias:'r', describe:'Sort output by rank', type:'string', choices:['A', 'B', 'C', 'D'], default:undefined});
 		yargs.option('unique', {alias:'u', describe:'Only show words with unique set of letters', type:'boolean', default:false});
 		yargs.option('filter', {alias:'f', describe:'Filter using regular expression', type:'string', default:undefined});
     }
@@ -102,10 +102,8 @@ module.exports = class extends Command {
 		let rank = 0;
 		let count = 0;
 
-		for (var i = 0; i < word.length; i++) {
+		for (var i = 0; i < word.length; i++, count++) {
 			let letter = word.charAt(i);
-
-			count++;
 			rank += this.frequency[letter];
 		}
 
@@ -117,14 +115,25 @@ module.exports = class extends Command {
 		let rank = 0;
 		let count = 0;
 
-		for (var i = 0; i < word.length; i++) {
+		for (var i = 0; i < word.length; i++, count++) {
 			let letter = word.charAt(i);
-
-			count++;
 			rank += this.positionFrequency[i][letter];
 		}
 
-		return Math.floor(rank * 100 / 5 + 0.5);
+		return Math.floor(rank * 100 / count + 0.5);
+	}
+
+	rankWordByCombination(word) {
+		let rank = 0;
+		let count = 0;
+
+		for (var i = 0; i < word.length; i++, count++) {
+			let letter = word.charAt(i);
+			rank += this.positionFrequency[i][letter] * this.frequency[letter];
+		}
+
+		return Math.floor(rank * 100 / count + 0.5);
+
 	}
 
 	async run() {
@@ -215,8 +224,9 @@ module.exports = class extends Command {
 			if (isWordInAlphabet(word, alphabet)) {
 				let rankA = this.rankWord(word);
 				let rankB = this.rankWordByPosition(word);
-				let rankC = Math.floor((rankA + rankB) / 2);
-				array.push({word:word, rankA:rankA, rankB:rankB, rankC:rankC});
+				let rankC = this.rankWordByCombination(word);
+				let rankD = Math.floor(((rankA + rankB + rankC) / 3 + 0.5));
+				array.push({word:word, rankA:rankA, rankB:rankB, rankC:rankC, rankD:rankD});
 			}
 		});
 
@@ -251,12 +261,13 @@ module.exports = class extends Command {
 					table.cell('Rank A', item.rankA, EasyTable.leftPadder(' '));
 					table.cell('Rank B', item.rankB, EasyTable.leftPadder(' '));
 					table.cell('Rank C', item.rankC, EasyTable.leftPadder(' '));
+					table.cell('Rank D', item.rankD, EasyTable.leftPadder(' '));
 					table.newRow();
 				})
 		
 				this.log(table.toString());
 	
-				this.log(`Displayed ${displayedItems} out of ${allItems} rows.`);
+				this.log(`Displayed ${displayedItems} out of ${allItems} words.`);
 			
 			}
 		

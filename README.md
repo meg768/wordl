@@ -1,5 +1,5 @@
-# wordle-statistics
-Statistics for the game of Wordle
+# wordle-words
+Words and statistics for the game of Wordle
 
 ## Syntax
 
