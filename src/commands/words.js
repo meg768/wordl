@@ -42,7 +42,6 @@ module.exports = class extends Command {
 	getLetterFrequency() {
 
 		var map = {};
-		var count = 0;
 		var max = 0;
 
 		this.alphabet.split('').forEach((letter) => {
@@ -54,8 +53,7 @@ module.exports = class extends Command {
 			for (var i = 0; i < word.length; i++) {
 				var letter = word.charAt(i);
 
-				map[letter]++;
-				count++;
+				map[letter] = map[letter] + 1;
 
 				if (map[letter] > max)
 					max = map[letter];
@@ -72,7 +70,6 @@ module.exports = class extends Command {
 	getLetterPositionFrequency(position) {
 
 		var map = {};
-		var count = 0;
 		var max = 0;
 
 		this.alphabet.split('').forEach((letter) => {
@@ -83,8 +80,7 @@ module.exports = class extends Command {
 
 			var letter = word.charAt(position);
 
-			map[letter]++;
-			count++;
+			map[letter] = map[letter] + 1;
 
 			if (map[letter] > max)
 				max = map[letter];			
@@ -94,6 +90,7 @@ module.exports = class extends Command {
 			map[letter] = map[letter] / max;
 		});
 
+//		console.log(map);
 		return map;
 	}
 
