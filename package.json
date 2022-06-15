@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "description": "Statistics for the game of Wordle - not the game",
   "main": "wordle.js",
+  "bin": {
+    "wordle": "wordle.js"
+  },
   "scripts": {
     "test": "./wordle.js filter --contains SEA"
   },
