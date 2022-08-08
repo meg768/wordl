@@ -3,7 +3,13 @@
 
 class App {
 
+
+    addCommand(options) {
+
+    }
+
 	run() {
+
 
 		try {
 			var yargs = require('yargs');
@@ -11,9 +17,16 @@ class App {
 			yargs.scriptName('wordle');
 			yargs.usage('Usage: $0 <command>');
 
+            this.addCommand({
+                name: 'Foo',
+                module: './commands/test.js',
+                options: {
+                    'letters':{alias:'w', describe:'Only use the specified set of letters (default is the entire alphabet)', type:'string', default:undefined}
+                }
+            }); 
 			new (require('./src/commands/words.js'))();
 			new (require('./src/commands/lookup.js'))();
-	//		new (require('./src/commands/startup.js'))();
+			new (require('./src/commands/startup.js'))();
 			new (require('./src/commands/stats.js'))();
 			new (require('./src/commands/nabo.js'))();
 //			new (require('./src/commands/test.js'))();

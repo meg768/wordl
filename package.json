@@ -21,6 +21,7 @@
   "homepage": "https://github.com/meg768/wordle-words#readme",
   "dependencies": {
     "easy-table": "^1.2.0",
+    "progress": "^2.0.3",
     "yargs": "^17.4.0",
     "yow": "^1.0.110"
   }
