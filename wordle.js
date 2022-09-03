@@ -27,6 +27,7 @@ class App {
 			new (require('./src/commands/words.js'))();
 			new (require('./src/commands/lookup.js'))();
 			new (require('./src/commands/startup.js'))();
+			new (require('./src/commands/start.js'))();
 			new (require('./src/commands/stats.js'))();
 			new (require('./src/commands/nabo.js'))();
 //			new (require('./src/commands/test.js'))();

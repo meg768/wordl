@@ -8,7 +8,7 @@ module.exports = class extends Command {
 
     constructor() {
 
-        super({command: 'startup [options]', description: 'Finds out good starting words'}); 
+        super({command: 'start [options]', description: 'Finds out good starting words'}); 
 
 
 		this.sprintf = require('yow/sprintf');
@@ -19,22 +19,21 @@ module.exports = class extends Command {
 
     options(yargs) {
         super.options(yargs);
-        yargs.option('limit', {alias:'l', describe:'Limit number of displayed words', type:'number', default:10});
         yargs.option('contains', {alias:'c', describe:'Contains letters', type:'string', default:undefined});
-		yargs.option('omit', {alias:'o', describe:'Omit specified letters in result', type:'string', default:''});
-        yargs.option('unique', {alias:'u', describe:'Only show words with unique set of letters', type:'boolean', default:false});
-        yargs.option('green', {alias:'g', describe:'Green value', type:'number', default:1.5});
+        yargs.option('omit', {alias:'o', describe:'Omit letters', type:'string', default:undefined});
+        yargs.option('unique', {alias:'u', describe:'Only uniqe letter words', type:'boolean', default:true});
+        yargs.option('limit', {alias:'l', describe:'Limit number of displayed words', type:'number', default:10});
+        yargs.option('green', {alias:'g', describe:'Green value', type:'number', default:1});
         yargs.option('yellow', {alias:'y', describe:'Yellow value', type:'number', default:1});
 
     }
 
 
     match(text, word) {
-        let green = 0;
-        let yellow = 0;
-
         text = text.split('');
         word = word.split('');
+        let green = 0;
+        let yellow = 0;
 
         for (let i = 0; i < 5; i++) {
             let position = word.indexOf(text[i]);
@@ -72,12 +71,15 @@ module.exports = class extends Command {
 
         let result = [];
         let words = this.words;
+        let ratings = [];
+
 
         if (this.argv.unique) {
             words = words.filter((word) => {
                 return word.match(/(?=^[A-Z]+$)(.)+.*\1.*/g) == null;
-            });    
+             });
         }
+
 
         if (this.argv.omit) {
             let omit = isArray(this.argv.omit) ? this.argv.omit.join('') : this.argv.omit;
@@ -87,11 +89,31 @@ module.exports = class extends Command {
             });
         }
 
-        let progress = new ProgressBar(':bar', { incomplete:'▫︎', complete:'◼︎',width: 20, total: words.length });
+
+        this.log(`Computing ratings for ${words.length} words...`);
 
         for (let word of words) {
-            result.push({word:word, rating:this.computeRatingForWord(word)});
-            progress.tick();
+            ratings[word] = this.computeRatingForWord(word);
+        }
+
+
+        let progress = new ProgressBar(':bar', { incomplete:'▫︎', complete:'◼︎',width: 20, total: words.length });
+
+        this.log(`Simulating...`);
+
+        for (let i = 0; i < words.length; i++) {
+           progress.tick();
+           let wordA = words[i];
+
+           for (let ii = i + 1; ii < words.length; ii++) {
+                let wordB  = words[ii];
+                let rating = ratings[wordA] + ratings[wordB];
+                let entry  = {wordA:wordA, wordB:wordB, letters:wordA+wordB, rating:rating};
+
+                if (wordA.match(`[${wordB}]`) == null) {
+                    result.push(entry);
+                } 
+            }
         }
 
         if (this.argv.contains != undefined) {
@@ -104,13 +126,19 @@ module.exports = class extends Command {
             contains = `^${contains.join('')}.+$`;
 
             result = result.filter((item) => {
-                return (item.word).match(contains) != null;
+                return (item.letters).match(contains) != null;
+
             });
         }
 
+
+
+
+        this.log(`Sorting by rank...`);
         result.sort((a, b) => {
             return b.rating - a.rating;
         });
+
 
         let array = result;
 
@@ -123,7 +151,8 @@ module.exports = class extends Command {
             let table = new EasyTable();
 
             array.forEach(function(item) {
-                table.cell('Word', item.word);
+                table.cell('WordA', item.wordA);
+                table.cell('WordB', item.wordB);
                 table.cell('Rank', item.rating, EasyTable.leftPadder(' '));
                 table.newRow();
             })

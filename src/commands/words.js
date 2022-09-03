@@ -35,7 +35,7 @@ module.exports = class extends Command {
 		yargs.option('pattern', {alias:'p', describe:'In C/V/X format.', type:'string', default:undefined});
 		yargs.option('rank', {alias:'r', describe:'Sort output by rank', type:'string', choices:['A', 'B', 'C', 'D'], default:undefined});
 		yargs.option('unique', {alias:'u', describe:'Only show words with unique set of letters', type:'boolean', default:false});
-		yargs.option('filter', {alias:'f', describe:'Filter using regular expression', type:'string', default:undefined});
+		yargs.option('match', {alias:'m', describe:'Match using regular expression', type:'string', default:undefined});
     }
 
 
@@ -148,10 +148,10 @@ module.exports = class extends Command {
 			});
 		}
 
-		if (this.argv.filter) {
-			let filter = isArray(this.argv.filter) ? this.argv.filter : [this.argv.filter];
+		if (this.argv.match) {
+			let match = isArray(this.argv.match) ? this.argv.match : [this.argv.match];
 
-			filter.forEach((regexp) => {
+			match.forEach((regexp) => {
 				words = words.filter((word) => {
 					return word.match(regexp) != null;
 				});
